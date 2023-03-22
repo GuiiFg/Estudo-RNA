@@ -4,11 +4,63 @@ import random as rd
 class Neuron:
   def __init__(self, fg, teta, wteta = rd.random()):
     self.__wi = []
+    self.__initWi = []
     self.__epoch = 0
     self.__teta = teta
     self.__wteta = wteta
+    self.__initWteta = wteta
     self.__fg = fg
     self.__lerning_rate = 0
+
+  def trainWithLog(self, train_x:pd.DataFrame, train_y:pd.DataFrame, times:int, path:str = None, max_epochs = 0, lerning_rate = rd.random(), verbose= False):
+    initialW = []
+    finalW = []
+    totalEpochs = []
+    dfJson = {}
+
+    for i in range(times):
+      self.__epoch = 0
+      newWTeta = rd.random()
+      self.__wteta = newWTeta
+      self.__initWteta = newWTeta
+      try:
+        _test = dfJson['wT']
+        dfJson['wT'].append(self.__initWteta)
+      except:
+        dfJson['wT'] = [self.__initWteta]
+      self.train(train_x, train_y, max_epochs, lerning_rate, verbose)
+      for index, w in enumerate(self.__initWi):
+        try:
+          _test = dfJson[f'w{index}']
+          dfJson[f'w{index}'].append(w)
+        except:
+          dfJson[f'w{index}'] = [w]
+
+      for index, w in enumerate(self.__wi):
+        try:
+          _test = dfJson[f'w{index}f']
+          dfJson[f'w{index}f'].append(w)
+        except:
+          dfJson[f'w{index}f'] = [w]
+
+      try:
+        _test = dfJson['wTf']
+        dfJson['wTf'].append(self.__wteta)
+      except:
+        dfJson['wTf'] = [self.__wteta]
+
+      try:
+          _test = dfJson['epochs']
+          dfJson['epochs'].append(self.__epoch)
+      except:
+          dfJson['epochs'] = [self.__epoch]
+
+    df = pd.DataFrame(dfJson)
+
+    if path != None:
+      df.to_csv(path, ';', encoding='utf8', index=False)
+
+    return df
 
 
   def train(self, train_x:pd.DataFrame, train_y:pd.DataFrame, max_epochs = 0, lerning_rate = rd.random(), verbose= False):
@@ -18,7 +70,9 @@ class Neuron:
     
     self.__lerning_rate = lerning_rate
     num_features = len(train_x.columns)
-    self.__wi = [rd.random() for x in range(num_features)]
+    randomW = [rd.random() for x in range(num_features)]
+    self.__wi = list(randomW)
+    self.__initWi = list(randomW)
     erros = 1
     expected_result = list(train_y[train_y.columns[0]])
     epoch_accuracy = 0

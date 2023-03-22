@@ -12,7 +12,7 @@ perceptron = Neuron(fg = ActivationFunctions.SigmoidBipolar, teta= -1)
 
 perceptron.printW()
 
-perceptron.train(train_x, train_y, 999, lerning_rate= 0.01, verbose= True)
+perceptron.trainWithLog(train_x, train_y, times=10, path='C:/Users/Guilherme/Repos/Estudo-RNA/src/perceptron/testes/teste.csv', max_epochs = 999, lerning_rate= 0.01, verbose= False)
 
 perceptron.predict(databaseTeste)
 
