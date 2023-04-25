@@ -129,9 +129,8 @@ class Neuron:
 
     return results
   
-  # @depracted
-  # def predict(self, test_x:pd.DataFrame):
-  #   return self.__predict(test_x)
+  def predict(self, test_x:pd.DataFrame):
+    return [self.__fg(x) for x in self.__predict(test_x)]
 
   def printW(self):
     print(self.__wi)
